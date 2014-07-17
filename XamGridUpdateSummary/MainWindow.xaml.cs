@@ -41,7 +41,7 @@ namespace XamGridUpdateSummary
                     if (FormulaGrid.Rows.Count > 0)
                         FormulaGrid.Rows[0].Manager.RefreshSummaries();
                 };
-            }            
+            }
         }
 
         private void CommandBinding_CopyExecuted(object sender, ExecutedRoutedEventArgs e)

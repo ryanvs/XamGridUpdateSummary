@@ -28,7 +28,8 @@
 			AutoGenerateColumns="False"
 			ActiveItem="{Binding ActiveItem}"
 			ItemsSource="{Binding Formula.Components}"
-			ContextMenu="{StaticResource GridContextMenu}">
+			ContextMenu="{StaticResource GridContextMenu}"
+			CellExitedEditMode="FormulaGrid_CellExitedEditMode">
 			<ig:XamGrid.Resources>
 				<igPrim:SummaryResultFormatStringValueConverter x:Key="SDFormatStringConverter"/>
 				<Style TargetType="{x:Type ig:CellControl}">
@@ -38,7 +39,15 @@
 					<Setter Property="SummaryDisplayTemplate">
 						<Setter.Value>
 							<DataTemplate>
-								<TextBlock Text="{Binding Converter={StaticResource SDFormatStringConverter}}"/>
+								<TextBlock Text="{Binding Converter={StaticResource SDFormatStringConverter}}">
+									<TextBlock.ToolTip>
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Text="{Binding SummaryDefinition.SummaryOperand.RowDisplayLabelResolved}" />
+											<TextBlock Text=" = "/>
+											<TextBlock Text="{Binding Converter={StaticResource SDFormatStringConverter}}"/>
+										</StackPanel>
+									</TextBlock.ToolTip>
+								</TextBlock>
 							</DataTemplate>
 						</Setter.Value>
 					</Setter>

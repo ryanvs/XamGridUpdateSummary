@@ -5,10 +5,10 @@ I am posting this to help others that may experience challenges with Infragistic
 
 ## Resolved Issues
 
-1. Invalid Markup when using SumSummaryOperand in XAML
+1. `Invalid Markup` when using SumSummaryOperand in XAML
 
     I wanted to automatically apply a Sum to a column so I put the following XAML in my file. Unfortunately this
-    caused an "Invalid Markup" exception where the Designer would not show any preview.
+    caused an `Invalid Markup` exception where the Designer would not show any preview.
 
     Here are the errors:
 
@@ -22,12 +22,20 @@ I am posting this to help others that may experience challenges with Infragistic
 
     **Solution : Add Reference to `InfragisticsWPF4.DataManager.v14.1`**
 
-2. Edit to columns does not change SumSummary
+2. Editing column value does not change SumSummary
 
     The grid does not automatically update the Summaries. You have to manually call 'RefreshSummaries'.
     For MVVM application, you will need a reference to the XamGrid or add an Action that will refresh the summaries and use the grid to set the Action. Here is how I accomplished this in this sample using code behind (NOTE: there are many ways to do this with MVVM frameworks, such as Caliburn.Micro you could derive from 'Screen' and access the XamGrid):
 
-    **Solution:**
+    **Solution 1: Automatically update summary after cell edit**
+
+    [Update summary values in response to cell edit](http://www.infragistics.com/community/blogs/kiril_matev/archive/2010/05/21/understanding-advanced-summaries-in-the-xamwebgrid.aspx)
+
+    > ## Updating summary values in response to cell edit
+    > Please edit any of the values in the Units column and note that the summary value is updated in response to that. Automatic updates of summary values are not built-in for performance reasons. In order to setup the XamGrid to update the summary value, handle the CellExitedEditMode event, and in the handler, invoke the InvalidateData member of the XamGrid. This would cause the XamGrid to regenerate the summary values to reflect the edit operation.
+
+
+    **Solution 2: Manually call RefreshSummaries from ViewModel**
 
     ViewModel:
 
@@ -93,4 +101,6 @@ I am posting this to help others that may experience challenges with Infragistic
 
 1. Move Up / Move Down causes the ActiveCell to change to the first cell in the row
 
-2. Change above solutions to be more MVVM friendly, e.g. write Behaviors for the same functionality
+2. Right-click context menu on the grid shows the same context menu everywhere on the grid, including header and summary rows.
+
+3. Change above solutions to be more MVVM friendly, e.g. write Behaviors for the same functionality
