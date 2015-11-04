@@ -4,7 +4,13 @@ I created this project intending to ask the following questions from Infragistic
 I am posting this to help others that may experience challenges with Infragistics XamGrid.
 I started with Infragistics WPF v14.1 and eventually upgraded to v14.2.
 
+This project is a simple formula (recipe or batch) calculator for percentage mass and percentage volume. The density is used to convert
+between mass and volume, and then calculate the mass and volume percentages for each component, and finally for the overall formula.
+
 ![MainWindow Screenshot](MainWindow.png)
+
+I used [Fody](https://github.com/Fody/Fody) and [PropertyChanged.Fody](https://github.com/Fody/PropertyChanged) for simple
+`INotifyPropertyChanged` implementation.
 
 ## Resolved Issues
 

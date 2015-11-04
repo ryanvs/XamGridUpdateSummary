@@ -119,12 +119,13 @@
 				<ig:TextColumn
 					Key="Mass"
 					HeaderText="Mass"
-					FormatString="{}{0:N2}"
+					FormatString="{}{0:N2} kg"
+                    HorizontalContentAlignment="Right"
 					Width="Auto">
 					<ig:TextColumn.SummaryColumnSettings>
 						<ig:SummaryColumnSettings>
 							<ig:SummaryColumnSettings.SummaryOperands>
-								<ig:SumSummaryOperand IsApplied="True" FormatString="{}{0:N2}" RowDisplayLabel=""/>
+								<ig:SumSummaryOperand IsApplied="True" FormatString="{}{0:N2} kg" RowDisplayLabel=""/>
 							</ig:SummaryColumnSettings.SummaryOperands>
 						</ig:SummaryColumnSettings>
 					</ig:TextColumn.SummaryColumnSettings>
@@ -132,12 +133,13 @@
 				<ig:TextColumn
 					Key="Volume"
 					HeaderText="Volume"
-					FormatString="{}{0:N2}"
+					FormatString="{}{0:N2} L"
+                    HorizontalContentAlignment="Right"
 					Width="Auto">
 					<ig:TextColumn.SummaryColumnSettings>
 						<ig:SummaryColumnSettings>
 							<ig:SummaryColumnSettings.SummaryOperands>
-								<ig:SumSummaryOperand IsApplied="True" FormatString="{}{0:N2}" RowDisplayLabel=""/>
+								<ig:SumSummaryOperand IsApplied="True" FormatString="{}{0:N2} L" RowDisplayLabel=""/>
 							</ig:SummaryColumnSettings.SummaryOperands>
 						</ig:SummaryColumnSettings>
 					</ig:TextColumn.SummaryColumnSettings>
@@ -145,13 +147,16 @@
 				<ig:TextColumn
 					Key="Density"
 					HeaderText="Density"
-					FormatString="{}{0:N2}"
+					FormatString="{}{0:N2} kg/L"
+                    HorizontalContentAlignment="Right"
 					Width="Auto"
 					IsSummable="False"/>
 				<ig:TextColumn
 					Key="PercentByVolume"
+                    IsReadOnly="True"
 					HeaderText="%vol"
 					FormatString="{}{0:N2} %"
+                    HorizontalContentAlignment="Right"
 					Width="Auto">
 					<ig:TextColumn.SummaryColumnSettings>
 						<ig:SummaryColumnSettings>
@@ -163,8 +168,10 @@
 				</ig:TextColumn>
 				<ig:TextColumn
 					Key="PercentByMass"
+                    IsReadOnly="True"
 					HeaderText="%mass"
 					FormatString="{}{0:N2} %"
+                    HorizontalContentAlignment="Right"
 					Width="Auto">
 					<ig:TextColumn.SummaryColumnSettings>
 						<ig:SummaryColumnSettings>
