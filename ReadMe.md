@@ -2,6 +2,9 @@
 
 I created this project intending to ask the following questions from Infragistics, but ultimately solved them before I asked the questions.
 I am posting this to help others that may experience challenges with Infragistics XamGrid.
+I started with Infragistics WPF v14.1 and eventually upgraded to v14.2.
+
+![MainWindow Screenshot](MainWindow.png)
 
 ## Resolved Issues
 
