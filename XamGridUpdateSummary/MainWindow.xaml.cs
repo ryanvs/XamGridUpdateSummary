@@ -79,8 +79,52 @@ namespace XamGridUpdateSummary
             var parent = (CellsPanel)cell.Parent;
             var data = parent.Row.Data;
             if (FormulaGrid.ActiveCell != cell.Cell)
+            {
                 FormulaGrid.ActiveCell = cell.Cell;
-            Trace.TraceInformation("MouseRightButtonDown: ({0}, {1}), ActiveCell: {2}", pos.X, pos.Y, FormulaGrid.ActiveCell);
+                Trace.TraceInformation("Cell_MouseRightButtonDown: ({0}, {1}), ActiveCell: {2}", pos.X, pos.Y, FormulaGrid.ActiveCell);
+            }
+        }
+
+        /// <summary>
+        /// Updates the ActiveCell when the right mouse button is pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HeaderCell_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var pos = e.GetPosition((IInputElement)sender);
+            var cell = (HeaderCellControl)sender;
+            var parent = (CellsPanel)cell.Parent;
+            Trace.TraceInformation("HeaderCell_MouseRightButtonDown: ({0}, {1}), ActiveCell: {2}", pos.X, pos.Y, FormulaGrid.ActiveCell);
+        }
+
+        private void FormulaGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            var elem = FormulaGrid.InputHitTest(new Point(e.CursorLeft, e.CursorTop));
+            Trace.TraceInformation("Grid_ContextMenuOpening: ({0},{1}), Sender={2}", e.CursorLeft, e.CursorTop, sender.GetType().Name);
+        }
+
+        private void FormulaGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var pos = e.GetPosition((IInputElement)sender);
+            Trace.TraceInformation("Grid_MouseRightButtonDown: ({0},{1}), Sender={2}", pos.X, pos.Y, sender.GetType().Name);
+        }
+
+        private void FormulaGrid_ShowColumnChooser(object sender, RoutedEventArgs e)
+        {
+            FormulaGrid.ShowColumnChooser();
+        }
+        private void FormulaGrid_ShowGroupByArea(object sender, RoutedEventArgs e)
+        {
+            FormulaGrid.GroupBySettings.AllowGroupByArea = GroupByAreaLocation.Top;
+        }
+
+        private void FormulaGrid_ToggleFilterRow(object sender, RoutedEventArgs e)
+        {
+            if (FormulaGrid.FilteringSettings.AllowFiltering == FilterUIType.FilterRowTop)
+                FormulaGrid.FilteringSettings.AllowFiltering = FilterUIType.None;
+            else
+                FormulaGrid.FilteringSettings.AllowFiltering = FilterUIType.FilterRowTop;
         }
     }
 }

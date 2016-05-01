@@ -11,7 +11,7 @@
 		<app:MainViewModel/>
 	</Window.DataContext>
 	<Window.Resources>
-		<ContextMenu x:Key="GridContextMenu">
+		<ContextMenu x:Key="GridCellContextMenu">
 			<MenuItem x:Name="CopyContextMenu" Header="_Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Ctrl+C"/>
 			<MenuItem x:Name="PasteContextMenu" Header="_Paste" Command="{Binding PasteCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Ctrl+V"/>
 			<Separator/>
@@ -21,6 +21,21 @@
 			<MenuItem x:Name="MoveUpContextMenu" Header="Move _Up" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Alt+Up"/>
 			<MenuItem x:Name="MoveDownContextMenu" Header="Move Do_wn" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Alt+Down"/>
 		</ContextMenu>
+		<ContextMenu x:Key="DynamicGridCellContextMenu" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ig:XamGrid}}}">
+			<MenuItem x:Name="DynCopyContextMenu" Header="_Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Ctrl+C"/>
+			<MenuItem x:Name="DynPasteContextMenu" Header="_Paste" Command="{Binding PasteCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Ctrl+V"/>
+			<Separator/>
+			<MenuItem x:Name="DynAddContextMenu" Header="_Add" Command="{Binding AddCommand}"/>
+			<MenuItem x:Name="DynDeleteContextMenu" Header="_Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding ActiveItem}"/>
+			<Separator/>
+			<MenuItem x:Name="DynMoveUpContextMenu" Header="Move _Up" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Alt+Up"/>
+			<MenuItem x:Name="DynMoveDownContextMenu" Header="Move Do_wn" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Alt+Down"/>
+		</ContextMenu>
+		<ContextMenu x:Key="GridHeaderContextMenu">
+			<MenuItem x:Name="ColumnChooserContextMenu" Header="Show _Column Chooser" Click="FormulaGrid_ShowColumnChooser" />
+			<MenuItem x:Name="GroupByContextMenu" Header="Show _Group By Area" Click="FormulaGrid_ShowGroupByArea" />
+			<MenuItem x:Name="FilterRowContextMenu" Header="Show/Hide _Filter Row" Click="FormulaGrid_ToggleFilterRow" />
+		</ContextMenu>
 	</Window.Resources>
 	<Grid>
 		<ig:XamGrid
@@ -28,14 +43,24 @@
 			AutoGenerateColumns="False"
 			ActiveItem="{Binding ActiveItem}"
 			ItemsSource="{Binding Formula.Components}"
-			ContextMenu="{StaticResource GridContextMenu}"
-			CellExitedEditMode="FormulaGrid_CellExitedEditMode">
+			MouseRightButtonDown="FormulaGrid_MouseRightButtonDown"
+			CellExitedEditMode="FormulaGrid_CellExitedEditMode"
+			ContextMenuOpening="FormulaGrid_ContextMenuOpening">
 			<ig:XamGrid.Resources>
 				<igPrim:SummaryResultFormatStringValueConverter x:Key="SDFormatStringConverter"/>
+				<Style TargetType="{x:Type igPrim:FilterRowCellControl}">
+					<Setter Property="ContextMenu" Value="{x:Null}"/>
+				</Style>
+				<Style TargetType="{x:Type igPrim:HeaderCellControl}">
+					<EventSetter Event="MouseRightButtonDown" Handler="HeaderCell_MouseRightButtonDown"/>
+					<Setter Property="ContextMenu" Value="{DynamicResource GridHeaderContextMenu}"/>
+				</Style>
 				<Style TargetType="{x:Type ig:CellControl}">
 					<EventSetter Event="MouseRightButtonDown" Handler="Cell_MouseRightButtonDown"/>
+					<Setter Property="ContextMenu" Value="{DynamicResource DynamicGridCellContextMenu}"/>
 				</Style>
 				<Style TargetType="{x:Type igPrim:SummaryRowCellControl}">
+					<Setter Property="ContextMenu" Value="{x:Null}"/>
 					<Setter Property="SummaryDisplayTemplate">
 						<Setter.Value>
 							<DataTemplate>
@@ -61,6 +86,9 @@
 					IsMouseActionEditingEnabled="SingleClick"
 					IsOnCellActiveEditingEnabled="True"/>
 			</ig:XamGrid.AddNewRowSettings>
+			<ig:XamGrid.ColumnMovingSettings>
+				<ig:ColumnMovingSettings AllowColumnMoving="Indicator"/>
+			</ig:XamGrid.ColumnMovingSettings>
 			<ig:XamGrid.EditingSettings>
 				<ig:EditingSettings
 					AllowEditing="Cell"
@@ -120,7 +148,7 @@
 					Key="Mass"
 					HeaderText="Mass"
 					FormatString="{}{0:N2} kg"
-                    HorizontalContentAlignment="Right"
+					HorizontalContentAlignment="Right"
 					Width="Auto">
 					<ig:TextColumn.SummaryColumnSettings>
 						<ig:SummaryColumnSettings>
@@ -134,7 +162,7 @@
 					Key="Volume"
 					HeaderText="Volume"
 					FormatString="{}{0:N2} L"
-                    HorizontalContentAlignment="Right"
+					HorizontalContentAlignment="Right"
 					Width="Auto">
 					<ig:TextColumn.SummaryColumnSettings>
 						<ig:SummaryColumnSettings>
@@ -148,15 +176,15 @@
 					Key="Density"
 					HeaderText="Density"
 					FormatString="{}{0:N2} kg/L"
-                    HorizontalContentAlignment="Right"
+										HorizontalContentAlignment="Right"
 					Width="Auto"
 					IsSummable="False"/>
 				<ig:TextColumn
 					Key="PercentByVolume"
-                    IsReadOnly="True"
+					IsReadOnly="True"
 					HeaderText="%vol"
 					FormatString="{}{0:N2} %"
-                    HorizontalContentAlignment="Right"
+					HorizontalContentAlignment="Right"
 					Width="Auto">
 					<ig:TextColumn.SummaryColumnSettings>
 						<ig:SummaryColumnSettings>
@@ -168,10 +196,10 @@
 				</ig:TextColumn>
 				<ig:TextColumn
 					Key="PercentByMass"
-                    IsReadOnly="True"
+					IsReadOnly="True"
 					HeaderText="%mass"
 					FormatString="{}{0:N2} %"
-                    HorizontalContentAlignment="Right"
+					HorizontalContentAlignment="Right"
 					Width="Auto">
 					<ig:TextColumn.SummaryColumnSettings>
 						<ig:SummaryColumnSettings>

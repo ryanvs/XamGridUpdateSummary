@@ -272,7 +272,7 @@ namespace XamGridUpdateSummary
         public bool CanMoveUp(object parameter)
         {
             var item = parameter as ComponentItem;
-            return item != null && item.Position > 0;
+            return item != null && item.Position > 1;
         }
 
         public void MoveUp(object parameter)
@@ -300,7 +300,7 @@ namespace XamGridUpdateSummary
         public bool CanMoveDown(object parameter)
         {
             var item = parameter as ComponentItem;
-            return item != null && item.Position >= 0 && item.Position < Formula.Components.Count;
+            return item != null && item.Position >= 1 && item.Position < Formula.Components.Count;
         }
 
         public void MoveDown(object parameter)
@@ -313,5 +313,22 @@ namespace XamGridUpdateSummary
         }
         #endregion
 
+        #region Column Chooser
+        private RelayCommand _columnChooserCommand;
+        public ICommand ColumnChooserCommand
+        {
+            get
+            {
+                if (_columnChooserCommand == null)
+                    _columnChooserCommand = new RelayCommand(ColumnChooser);
+                return _columnChooserCommand;
+            }
+        }
+
+        public void ColumnChooser(object _)
+        {
+
+        }
+        #endregion
     }
 }
