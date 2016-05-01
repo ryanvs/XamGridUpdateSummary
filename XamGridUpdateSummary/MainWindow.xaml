@@ -35,6 +35,7 @@
 			<MenuItem x:Name="ColumnChooserContextMenu" Header="Show _Column Chooser" Click="FormulaGrid_ShowColumnChooser" />
 			<MenuItem x:Name="GroupByContextMenu" Header="Show _Group By Area" Click="FormulaGrid_ShowGroupByArea" />
 			<MenuItem x:Name="FilterRowContextMenu" Header="Show/Hide _Filter Row" Click="FormulaGrid_ToggleFilterRow" />
+			<MenuItem x:Name="PinColumnContextMenu" Header="_Fix/Unfix Column" Click="FormulaGrid_ToggleFixedColumn" IsChecked="{Binding IsFixedColumn, Mode=OneWay}" IsEnabled="{Binding CanFixColumn}"  DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type app:MainWindow}}}"/>
 		</ContextMenu>
 	</Window.Resources>
 	<Grid>

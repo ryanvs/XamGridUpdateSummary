@@ -3,8 +3,10 @@ using Infragistics.Controls.Grids;
 using Infragistics.Controls.Grids.Primitives;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,8 +24,17 @@ namespace XamGridUpdateSummary
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private CellControlBase _rightClickCell;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged([CallerMemberName]string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -83,6 +94,7 @@ namespace XamGridUpdateSummary
                 FormulaGrid.ActiveCell = cell.Cell;
                 Trace.TraceInformation("Cell_MouseRightButtonDown: ({0}, {1}), ActiveCell: {2}", pos.X, pos.Y, FormulaGrid.ActiveCell);
             }
+            _rightClickCell = cell;
         }
 
         /// <summary>
@@ -96,6 +108,8 @@ namespace XamGridUpdateSummary
             var cell = (HeaderCellControl)sender;
             var parent = (CellsPanel)cell.Parent;
             Trace.TraceInformation("HeaderCell_MouseRightButtonDown: ({0}, {1}), ActiveCell: {2}", pos.X, pos.Y, FormulaGrid.ActiveCell);
+            _rightClickCell = cell;
+            RaisePropertyChanged("IsFixedColumn");
         }
 
         private void FormulaGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -117,6 +131,8 @@ namespace XamGridUpdateSummary
         private void FormulaGrid_ShowGroupByArea(object sender, RoutedEventArgs e)
         {
             FormulaGrid.GroupBySettings.AllowGroupByArea = GroupByAreaLocation.Top;
+            FormulaGrid.GroupBySettings.IsGroupByAreaExpanded = false;
+
         }
 
         private void FormulaGrid_ToggleFilterRow(object sender, RoutedEventArgs e)
@@ -125,6 +141,39 @@ namespace XamGridUpdateSummary
                 FormulaGrid.FilteringSettings.AllowFiltering = FilterUIType.None;
             else
                 FormulaGrid.FilteringSettings.AllowFiltering = FilterUIType.FilterRowTop;
+        }
+
+        public bool CanFixColumn
+        {
+            get
+            {
+                var column = _rightClickCell?.Column;
+                return column?.IsFixable ?? false;
+            }
+        }
+
+        public bool IsFixedColumn
+        {
+            get
+            {
+                var column = _rightClickCell?.Column;
+                return column?.IsFixed != FixedState.NotFixed;
+            }
+        }
+
+        private void FormulaGrid_ToggleFixedColumn(object sender, RoutedEventArgs e)
+        {
+            Column column = null;
+            if (_rightClickCell != null)
+                column = _rightClickCell.Column;
+            if (column != null && column.IsFixable)
+            {
+                if (column.IsFixed == FixedState.NotFixed)
+                    column.IsFixed = FixedState.Left;
+                else
+                    column.IsFixed = FixedState.NotFixed;
+                RaisePropertyChanged("IsFixedColumn");
+            }
         }
     }
 }
