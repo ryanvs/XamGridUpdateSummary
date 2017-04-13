@@ -34,6 +34,7 @@ namespace XamGridUpdateSummary
         public string Name { get; set; }
         public double Mass { get; set; }
         public double Volume { get; set; }
+        [PropertyChanged.AlsoNotifyFor("Mass", "Volume", "PercentByMass", "PercentByVolume")]
         public double Density { get; set; }
         public double PercentByVolume { get; set; }
         public double PercentByMass { get; set; }
