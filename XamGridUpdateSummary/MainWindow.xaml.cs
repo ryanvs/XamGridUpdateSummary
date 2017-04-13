@@ -109,7 +109,10 @@ namespace XamGridUpdateSummary
             var parent = (CellsPanel)cell.Parent;
             Trace.TraceInformation("HeaderCell_MouseRightButtonDown: ({0}, {1}), ActiveCell: {2}", pos.X, pos.Y, FormulaGrid.ActiveCell);
             _rightClickCell = cell;
+            RaisePropertyChanged("CanFixColumn");
             RaisePropertyChanged("IsFixedColumn");
+            RaisePropertyChanged("CanGroupByColumn");
+            RaisePropertyChanged("IsGroupByColumn");
         }
 
         private void FormulaGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -130,9 +133,19 @@ namespace XamGridUpdateSummary
         }
         private void FormulaGrid_ShowGroupByArea(object sender, RoutedEventArgs e)
         {
-            FormulaGrid.GroupBySettings.AllowGroupByArea = GroupByAreaLocation.Top;
-            FormulaGrid.GroupBySettings.IsGroupByAreaExpanded = false;
+            var menuItem = (MenuItem)sender;
+            var location = (GroupByAreaLocation)menuItem.Tag;
 
+            menuItem.IsChecked = true;
+            FormulaGrid.GroupBySettings.AllowGroupByArea = location;
+            //FormulaGrid.GroupBySettings.IsGroupByAreaExpanded = false;
+
+            var parentItem = (MenuItem)menuItem.Parent;
+            var otherChildren = parentItem.Items.OfType<MenuItem>().Where(x => !ReferenceEquals(x, menuItem));
+            foreach (var otherItem in otherChildren)
+            {
+                otherItem.IsChecked = false;
+            }
         }
 
         private void FormulaGrid_ToggleFilterRow(object sender, RoutedEventArgs e)
@@ -172,7 +185,39 @@ namespace XamGridUpdateSummary
                     column.IsFixed = FixedState.Left;
                 else
                     column.IsFixed = FixedState.NotFixed;
+                RaisePropertyChanged("CanFixColumn");
                 RaisePropertyChanged("IsFixedColumn");
+            }
+        }
+
+        public bool CanGroupByColumn
+        {
+            get
+            {
+                var column = _rightClickCell?.Column;
+                return column?.IsGroupable ?? false;
+            }
+        }
+
+        public bool IsGroupByColumn
+        {
+            get
+            {
+                var column = _rightClickCell?.Column;
+                return column?.IsGroupBy ?? false;
+            }
+        }
+
+        private void FormulaGrid_ToggleGroupByColumn(object sender, RoutedEventArgs e)
+        {
+            Column column = null;
+            if (_rightClickCell != null)
+                column = _rightClickCell.Column;
+            if (column != null && column.IsGroupable)
+            {
+                column.IsGroupBy = !column.IsGroupBy;
+                RaisePropertyChanged("CanGroupByColumn");
+                RaisePropertyChanged("IsGroupByColumn");
             }
         }
     }

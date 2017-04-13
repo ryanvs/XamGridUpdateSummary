@@ -33,9 +33,14 @@
 		</ContextMenu>
 		<ContextMenu x:Key="GridHeaderContextMenu">
 			<MenuItem x:Name="ColumnChooserContextMenu" Header="Show _Column Chooser" Click="FormulaGrid_ShowColumnChooser" />
-			<MenuItem x:Name="GroupByContextMenu" Header="Show _Group By Area" Click="FormulaGrid_ShowGroupByArea" />
+			<MenuItem x:Name="GroupByContextMenu" Header="_Group By Area">
+				<MenuItem x:Name="GroupByHiddenContextMenu" Header="_Hidden" Click="FormulaGrid_ShowGroupByArea" Tag="{x:Static ig:GroupByAreaLocation.Hidden}"/>
+				<MenuItem x:Name="GroupByTopContextMenu" Header="_Top" Click="FormulaGrid_ShowGroupByArea" Tag="{x:Static ig:GroupByAreaLocation.Top}"/>
+				<MenuItem x:Name="GroupByBottomContextMenu" Header="_Bottom" Click="FormulaGrid_ShowGroupByArea" Tag="{x:Static ig:GroupByAreaLocation.Bottom}"/>
+			</MenuItem>
 			<MenuItem x:Name="FilterRowContextMenu" Header="Show/Hide _Filter Row" Click="FormulaGrid_ToggleFilterRow" />
-			<MenuItem x:Name="PinColumnContextMenu" Header="_Fix/Unfix Column" Click="FormulaGrid_ToggleFixedColumn" IsChecked="{Binding IsFixedColumn, Mode=OneWay}" IsEnabled="{Binding CanFixColumn}"  DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type app:MainWindow}}}"/>
+			<MenuItem x:Name="FixColumnContextMenu" Header="_Fix/Unfix Column" Click="FormulaGrid_ToggleFixedColumn" IsChecked="{Binding IsFixedColumn, Mode=OneWay}" IsEnabled="{Binding CanFixColumn}"  DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type app:MainWindow}}}"/>
+			<MenuItem x:Name="GroupByColumnContextMenu" Header="_Group/Ungroup By Column" Click="FormulaGrid_ToggleGroupByColumn" IsChecked="{Binding IsGroupByColumn, Mode=OneWay}" IsEnabled="{Binding CanGroupByColumn}"  DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type app:MainWindow}}}"/>
 		</ContextMenu>
 	</Window.Resources>
 	<Grid>
