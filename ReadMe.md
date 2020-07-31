@@ -1,18 +1,19 @@
-﻿# XamGrid Issues
+﻿# XamDataGrid (and XamGrid) Summaries Example
 
 I created this project intending to ask the following questions from Infragistics, but ultimately solved them before I asked the questions.
-I am posting this to help others that may experience challenges with Infragistics XamGrid.
-I started with Infragistics WPF v14.1 and eventually upgraded to v14.2.
+I am posting this to help others that may experience challenges with Infragistics `XamGrid`.
+I started with Infragistics WPF v14.1 and eventually upgraded to v20.1.
+
+This project was originally for `XamGrid`, but now includes `XamDataGrid` since that is the primary focus going forward. The `XamGrid` still has an issue with summaries where it needs to be manually refreshed when a value involved in the summary changes. I used a code-behind hack to solve this back in 2014 and it looks like it is still necessary.
+
+## Overview
 
 This project is a simple formula (recipe or batch) calculator for percentage mass and percentage volume. The density is used to convert
 between mass and volume, and then calculate the mass and volume percentages for each component, and finally for the overall formula.
 
 ![MainWindow Screenshot](MainWindow.png)
 
-I used [Fody](https://github.com/Fody/Fody) and [PropertyChanged.Fody](https://github.com/Fody/PropertyChanged) for simple
-`INotifyPropertyChanged` implementation.
-
-## Resolved Issues
+## XamGrid Resolved Issues
 
 1. `Invalid Markup` when using SumSummaryOperand in XAML
 
@@ -48,6 +49,7 @@ I used [Fody](https://github.com/Fody/Fody) and [PropertyChanged.Fody](https://g
 
     ViewModel:
 
+```C#
 		/// <summary>
 		/// HACK: Linking refresh summary from view to view model (MVVM support)
 		/// </summary>
@@ -57,9 +59,11 @@ I used [Fody](https://github.com/Fody/Fody) and [PropertyChanged.Fody](https://g
 			get { return _refreshSummaries; }
 			set { _refreshSummaries = value; }
 		}
+```
 
     Code Behind - MainWindow.xaml.cs:
 
+```C#
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -77,9 +81,9 @@ I used [Fody](https://github.com/Fody/Fody) and [PropertyChanged.Fody](https://g
 					if (FormulaGrid.Rows.Count > 0)
 						FormulaGrid.Rows[0].Manager.RefreshSummaries();
 				};
-			}            
+			}
 		}
-
+```
 
 3. Right-click ContextMenu and ActiveItem
 
@@ -90,6 +94,7 @@ I used [Fody](https://github.com/Fody/Fody) and [PropertyChanged.Fody](https://g
 
     **Solution:**
 
+```C#
 		/// <summary>
 		/// Updates the ActiveCell when the right mouse button is pressed
 		/// </summary>
@@ -105,11 +110,12 @@ I used [Fody](https://github.com/Fody/Fody) and [PropertyChanged.Fody](https://g
 				FormulaGrid.ActiveCell = cell.Cell;
 			Trace.TraceInformation("MouseRightButtonDown: ({0}, {1}), ActiveCell: {2}", pos.X, pos.Y, FormulaGrid.ActiveCell);
 		}
+```
 
 ## Outstanding Issues
 
 1. Move Up / Move Down causes the ActiveCell to change to the first cell in the row
 
-2. Right-click context menu on the grid shows the same context menu everywhere on the grid, including header and summary rows.
+2. ~~Right-click context menu on the grid shows the same context menu everywhere on the grid, including header and summary rows.~~
 
 3. Change above solutions to be more MVVM friendly, e.g. write Behaviors for the same functionality

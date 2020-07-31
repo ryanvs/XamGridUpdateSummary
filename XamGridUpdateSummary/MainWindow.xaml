@@ -4,13 +4,25 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:ig="http://schemas.infragistics.com/xaml"
 	xmlns:igPrim="http://schemas.infragistics.com/xaml/primitives"
+	xmlns:igDP="http://infragistics.com/DataPresenter"
 	xmlns:app="clr-namespace:XamGridUpdateSummary"
-	Title="MainWindow" Height="350" Width="525"
+	Title="XamDataGrid and XamGrid Summaries"
+	Height="400" Width="600"
 >
 	<Window.DataContext>
 		<app:MainViewModel/>
 	</Window.DataContext>
 	<Window.Resources>
+		<Style x:Key="VerticalTextBlock" TargetType="{x:Type TextBlock}">
+			<Setter Property="Background" Value="LightGray"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="LayoutTransform">
+				<Setter.Value>
+					<RotateTransform Angle="-90"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
 		<ContextMenu x:Key="GridCellContextMenu">
 			<MenuItem x:Name="CopyContextMenu" Header="_Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Ctrl+C"/>
 			<MenuItem x:Name="PasteContextMenu" Header="_Paste" Command="{Binding PasteCommand}" CommandParameter="{Binding ActiveItem}" InputGestureText="Ctrl+V"/>
@@ -44,8 +56,157 @@
 		</ContextMenu>
 	</Window.Resources>
 	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="1*" MinHeight="100"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="1*" MinHeight="100"/>
+		</Grid.RowDefinitions>
+
+		<TextBlock
+			Grid.Row="0" Grid.Column="0"
+			Style="{StaticResource VerticalTextBlock}"
+			Text="XamDataGrid"/>
+
+		<igDP:XamDataGrid
+			x:Name="FormulaDataGrid"
+			Grid.Row="0" Grid.Column="1"
+			ActiveDataItem="{Binding ActiveItem}"
+			DataSource="{Binding Formula.Components}"
+			GroupByAreaLocation="None">
+			<igDP:XamDataGrid.FieldLayoutSettings>
+				<igDP:FieldLayoutSettings AutoGenerateFields="False"
+										  HighlightAlternateRecords="True"/>
+			</igDP:XamDataGrid.FieldLayoutSettings>
+			<igDP:XamDataGrid.FieldSettings>
+				<igDP:FieldSettings AllowEdit="True"
+									AllowRecordFiltering="True"
+									SummaryDisplayArea="BottomFixed"/>
+			</igDP:XamDataGrid.FieldSettings>
+			<igDP:XamDataGrid.FieldLayouts>
+				<igDP:FieldLayout>
+					<igDP:TextField
+						Name="Position"
+						Label="#"
+						Width="Auto">
+						<igDP:TextField.Settings>
+							<igDP:FieldSettings AllowSummaries="True"/>
+						</igDP:TextField.Settings>
+					</igDP:TextField>
+					<igDP:TextField
+						Name="Name"
+						Label="Name"
+						Width="Auto">
+						<igDP:TextField.Settings>
+							<igDP:FieldSettings AllowSummaries="False"/>
+						</igDP:TextField.Settings>
+					</igDP:TextField>
+					<igDP:Field
+						Name="Mass"
+						Label="Mass"
+						Format="N2"
+						HorizontalContentAlignment="Right"
+						Width="Auto">
+						<igDP:Field.Settings>
+							<igDP:FieldSettings AllowSummaries="True"/>
+						</igDP:Field.Settings>
+					</igDP:Field>
+					<igDP:Field
+						Name="Volume"
+						Label="Volume"
+						Format="N2"
+						HorizontalContentAlignment="Right"
+						Width="Auto">
+						<igDP:Field.Settings>
+							<igDP:FieldSettings AllowSummaries="True"/>
+						</igDP:Field.Settings>
+					</igDP:Field>
+					<igDP:Field
+						Name="Density"
+						Label="Density"
+						Format="N2"
+						HorizontalContentAlignment="Right"
+						Width="Auto">
+						<igDP:Field.Settings>
+							<igDP:FieldSettings AllowSummaries="False"/>
+						</igDP:Field.Settings>
+					</igDP:Field>
+					<igDP:Field
+						Name="PercentByVolume"
+						Label="%vol"
+						Format="N2"
+						HorizontalContentAlignment="Right"
+						Width="Auto">
+						<igDP:Field.Settings>
+							<igDP:FieldSettings AllowEdit="False" AllowSummaries="True"/>
+						</igDP:Field.Settings>
+					</igDP:Field>
+					<igDP:Field
+						Name="PercentByMass"
+						Label="%mass"
+						Format="N2"
+						HorizontalContentAlignment="Right"
+						Width="Auto">
+						<igDP:Field.Settings>
+							<igDP:FieldSettings AllowEdit="False" AllowSummaries="True"/>
+						</igDP:Field.Settings>
+					</igDP:Field>
+
+					<igDP:FieldLayout.SummaryDefinitions>
+						<igDP:SummaryDefinition
+							Calculator="{x:Static igDP:SummaryCalculator.Sum}"
+							SourceFieldName="Mass"
+							Key="MassSum"
+							StringFormat="{}{0:N2} kg"/>
+						<igDP:SummaryDefinition
+							Calculator="{x:Static igDP:SummaryCalculator.Sum}"
+							SourceFieldName="Volume"
+							Key="VolumeSum"
+							StringFormat="{}{0:N2} L"/>
+						<igDP:SummaryDefinition
+							Calculator="{x:Static igDP:SummaryCalculator.Sum}"
+							SourceFieldName="PercentByMass"
+							Key="PercentByMassSum"
+							StringFormat="{}{0:N2} %"/>
+						<igDP:SummaryDefinition
+							Calculator="{x:Static igDP:SummaryCalculator.Sum}"
+							SourceFieldName="PercentByVolume"
+							Key="PercentByVolumeSum"
+							StringFormat="{}{0:N2} %"/>
+					</igDP:FieldLayout.SummaryDefinitions>
+				</igDP:FieldLayout>
+			</igDP:XamDataGrid.FieldLayouts>
+		</igDP:XamDataGrid>
+
+		<GridSplitter
+			Grid.ColumnSpan="2"
+			Grid.Row="1"
+			Focusable="False"
+			Height="6"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Center"
+			ResizeBehavior="PreviousAndNext">
+			<GridSplitter.Template>
+				<ControlTemplate TargetType="{x:Type GridSplitter}">
+					<Grid>
+						<Button Content="····"/>
+						<Rectangle Fill="DarkGray"/>
+					</Grid>
+				</ControlTemplate>
+			</GridSplitter.Template>
+		</GridSplitter>
+
+		<TextBlock
+			Grid.Row="2" Grid.Column="0"
+			Style="{StaticResource VerticalTextBlock}"
+			Text="XamGrid"/>
+
 		<ig:XamGrid
 			x:Name="FormulaGrid"
+			Grid.Row="2" Grid.Column="1"
 			AutoGenerateColumns="False"
 			ActiveItem="{Binding ActiveItem}"
 			ItemsSource="{Binding Formula.Components}"
@@ -182,7 +343,7 @@
 					Key="Density"
 					HeaderText="Density"
 					FormatString="{}{0:N2} kg/L"
-										HorizontalContentAlignment="Right"
+					HorizontalContentAlignment="Right"
 					Width="Auto"
 					IsSummable="False"/>
 				<ig:TextColumn
@@ -217,5 +378,6 @@
 				</ig:TextColumn>
 			</ig:XamGrid.Columns>
 		</ig:XamGrid>
+
 	</Grid>
 </Window>

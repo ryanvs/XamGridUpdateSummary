@@ -111,11 +111,16 @@ namespace XamGridUpdateSummary
                     case nameof(Mass):
                         if (Density != 0.0)
                             Volume = Mass / Density;
+                        else if (Density == 0 && Mass > 0 && Volume > 0)
+                            Density = Mass / Volume;
                         else
                             Volume = 0.0;
                         break;
                     case nameof(Volume):
-                        Mass = Density * Volume;
+                        if (Density == 0 && Mass > 0 && Volume > 0)
+                            Density = Mass / Volume;
+                        else
+                            Mass = Density * Volume;
                         break;
                     default:
                         break;
