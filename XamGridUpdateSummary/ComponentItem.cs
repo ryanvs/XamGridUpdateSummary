@@ -8,16 +8,15 @@ using System.Threading.Tasks;
 
 namespace XamGridUpdateSummary
 {
-    [PropertyChanged.ImplementPropertyChanged]
     [Serializable]
-    public class ComponentItem : ICloneable
+    public class ComponentItem : ObservableObject, ICloneable
     {
         [NonSerialized]
         private Formula _formula;
         public Formula Formula
         {
             get { return _formula; }
-            set { _formula = value; }
+            set { SetField(ref _formula, value); }
         }
 
         [NonSerialized]
@@ -25,20 +24,67 @@ namespace XamGridUpdateSummary
         public bool IsCalculating
         {
             get { return _isCalculating; }
-            set { _isCalculating = value; }
+            set { SetField(ref _isCalculating, value); }
         }
 
-        public int Position { get; set; }
+        private int _position;
+        public int Position
+        {
+            get { return _position; }
+            set { SetField(ref _position, value); }
+        }
+
+        private string _name;
 
         [Required]
-        public string Name { get; set; }
-        public double Mass { get; set; }
-        public double Volume { get; set; }
-        [PropertyChanged.AlsoNotifyFor("Mass", "Volume", "PercentByMass", "PercentByVolume")]
-        public double Density { get; set; }
-        public double PercentByVolume { get; set; }
-        public double PercentByMass { get; set; }
-        public string Comment { get; set; }
+        public string Name
+        {
+            get { return _name; }
+            set { SetField(ref _name, value); }
+        }
+
+        private double _mass;
+        public double Mass
+        {
+            get { return _mass; }
+            set { SetField(ref _mass, value); }
+        }
+
+        private double _volume;
+        public double Volume
+        {
+            get { return _volume; }
+            set { SetField(ref _volume, value); }
+        }
+
+        private double _density;
+        //[PropertyChanged.AlsoNotifyFor("Mass", "Volume", "PercentByMass", "PercentByVolume")]
+        public double Density
+        {
+            get { return _density; }
+            set { SetField(ref _density, value); }
+        }
+
+        private double _percentByVolume;
+        public double PercentByVolume
+        {
+            get { return _percentByVolume; }
+            set { SetField(ref _percentByVolume, value); }
+        }
+
+        private double _percentByMass;
+        public double PercentByMass
+        {
+            get { return _percentByMass; }
+            set { SetField(ref _percentByMass, value); }
+        }
+
+        private string _comment;
+        public string Comment
+        {
+            get { return _comment; }
+            set { SetField(ref _comment, value); }
+        }
 
         public void Calculate()
         {
@@ -55,20 +101,20 @@ namespace XamGridUpdateSummary
                 if (string.IsNullOrEmpty(source))
                 {
                     if (Mass == 0.0 && Volume != 0.0)
-                        source = "Volume";
+                        source = nameof(Volume);
                     else //if (Mass != 0.0 && Volume == 0.0)
-                        source = "Mass";
+                        source = nameof(Mass);
                 }
 
                 switch (source)
                 {
-                    case "Mass":
+                    case nameof(Mass):
                         if (Density != 0.0)
                             Volume = Mass / Density;
                         else
                             Volume = 0.0;
                         break;
-                    case "Volume":
+                    case nameof(Volume):
                         Mass = Density * Volume;
                         break;
                     default:

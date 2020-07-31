@@ -7,20 +7,30 @@ using System.Threading.Tasks;
 
 namespace XamGridUpdateSummary
 {
-    [PropertyChanged.ImplementPropertyChanged]
-    public class Formula
+    public class Formula : ObservableObject
     {
         // Calculate Flag
         private bool _isCalculating;
         public bool IsCalculating
         {
             get { return _isCalculating; }
-            set { _isCalculating = value; }
+            set { SetField(ref _isCalculating, value); }
         }
 
         // Totals
-        public double TotalMass { get; set; }
-        public double TotalVolume { get; set; }
+        private double _totalMass;
+        public double TotalMass
+        {
+            get { return _totalMass; }
+            set { SetField(ref _totalMass, value); }
+        }
+
+        private double _totalVolume;
+        public double TotalVolume
+        {
+            get { return _totalVolume; }
+            set { SetField(ref _totalVolume, value); }
+        }
 
         // Components
         private Lazy<ObservableCollection<ComponentItem>> _components =

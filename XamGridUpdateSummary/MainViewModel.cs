@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace XamGridUpdateSummary
 {
-    [PropertyChanged.ImplementPropertyChanged]
-    public class MainViewModel
+    public class MainViewModel : ObservableObject
     {
         #region Constructor
         public MainViewModel()
@@ -45,10 +40,16 @@ namespace XamGridUpdateSummary
 
         #region Formula
 
+        private Formula _formula;
+
         /// <summary>
         /// Current Formula
         /// </summary>
-        public Formula Formula { get; set; }
+        public Formula Formula
+        {
+            get { return _formula; }
+            set { SetField(ref _formula, value); }
+        }
 
         public ComponentItem AddComponent()
         {
@@ -125,10 +126,16 @@ namespace XamGridUpdateSummary
 
         #region Selected Row and Index
 
+        private int _activeIndex;
+
         /// <summary>
         /// Index of the selected row (ActiveItem)
         /// </summary>
-        public int ActiveIndex { get; set; }
+        public int ActiveIndex
+        {
+            get { return _activeIndex; }
+            set { SetField(ref _activeIndex, value); }
+        }
 
         /// <summary>
         /// Selected Row / Component
@@ -143,7 +150,7 @@ namespace XamGridUpdateSummary
             get { return _activeItem; }
             set
             {
-                _activeItem = value;
+                SetField(ref _activeItem, value);
                 ActiveIndex = Formula.Components.IndexOf(value);
             }
         }
