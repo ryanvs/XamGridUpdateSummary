@@ -46,7 +46,7 @@ namespace XamGridUpdateSummary
         private double _mass;
 
         [Required]
-        [Range(double.Epsilon, double.MaxValue)]
+        [Range(double.Epsilon, double.MaxValue, ErrorMessage = "{0} must be greater than 0.")]
         public double Mass
         {
             get { return _mass; }
@@ -56,7 +56,7 @@ namespace XamGridUpdateSummary
         private double _volume;
 
         [Required]
-        [Range(double.Epsilon, double.MaxValue)]
+        [Range(double.Epsilon, double.MaxValue, ErrorMessage = "{0} must be greater than 0.")]
         public double Volume
         {
             get { return _volume; }
@@ -66,7 +66,7 @@ namespace XamGridUpdateSummary
         private double _density;
 
         [Required]
-        [Range(double.Epsilon, double.MaxValue)]
+        [Range(double.Epsilon, double.MaxValue, ErrorMessage = "{0} must be greater than 0.")]
         public double Density
         {
             get { return _density; }
@@ -152,7 +152,10 @@ namespace XamGridUpdateSummary
         }
 
         #region INotifyDataErrorInfo implementation
+        [NonSerialized]
         private ValidationContext validationContext;
+
+        [NonSerialized]
         private List<ValidationResult> validationResults;
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
@@ -174,6 +177,12 @@ namespace XamGridUpdateSummary
                 ?? Enumerable.Empty<string>();
         }
 
+        public IEnumerable<string> GetAllErrors()
+        {
+            return validationResults?.Select(x => x.ErrorMessage)
+                ?? Enumerable.Empty<string>();
+        }
+
         private void Validate(object sender, PropertyChangedEventArgs e)
         {
             if (validationContext == null)
@@ -188,6 +197,15 @@ namespace XamGridUpdateSummary
             {
                 RaiseErrorsChanged(error);
             }
+            ValidationToolTip = string.Join("\r\n", GetAllErrors());
+            RaisePropertyChanged(nameof(HasErrors));
+        }
+
+        private string _validationToolTip;
+        public string ValidationToolTip
+        {
+            get { return _validationToolTip; }
+            set { SetField(ref _validationToolTip, value); }
         }
         #endregion
     }

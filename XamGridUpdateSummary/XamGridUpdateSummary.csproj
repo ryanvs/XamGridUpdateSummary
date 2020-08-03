@@ -42,4 +42,8 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Resource Include="Assets\*.png" />
+    </ItemGroup>
+
 </Project>
