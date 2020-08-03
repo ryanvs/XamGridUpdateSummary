@@ -13,6 +13,14 @@ between mass and volume, and then calculate the mass and volume percentages for 
 
 ![MainWindow Screenshot](MainWindow.png)
 
+## Outstanding Issues
+
+1. In XamDataGrid, figure out how to right align the summary cells. It is possible to override the default style, but that causes all summary cells to be affected and not just specific cells.
+
+2. In XamDataGrid, connect the context menu for the rows, and a different context menu for the header. (I started with XamGrid, so it was implemented there first.)
+
+3. In XamDataGrid, figure out how to remove summary functions from the available list. This was easy with XamGrid, but I have not figured it out yet in XamDataGrid.
+
 ## XamGrid Resolved Issues
 
 1. `Invalid Markup` when using SumSummaryOperand in XAML
