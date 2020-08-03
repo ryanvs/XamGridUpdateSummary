@@ -80,15 +80,57 @@
 			Grid.Row="0" Grid.Column="1"
 			ActiveDataItem="{Binding ActiveItem}"
 			DataSource="{Binding Formula.Components}"
+			CellChanged="FormulaDataGrid_CellChanged"
 			GroupByAreaLocation="None">
-            <igDP:XamDataGrid.Resources>
-                <Style TargetType="{x:Type igDP:SummaryResultPresenter}">
-                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                </Style>
-            </igDP:XamDataGrid.Resources>
+			<igDP:XamDataGrid.Resources>
+				<Style TargetType="{x:Type igDP:SummaryResultPresenter}">
+					<Setter Property="HorizontalAlignment" Value="Right"/>
+				</Style>
+				<Style x:Key="{x:Static igDP:DataPresenterBase.DataErrorIconStyleKey}" TargetType="{x:Type Control}">
+					<Setter Property="Template">
+						<Setter.Value>
+							<ControlTemplate TargetType="{x:Type Control}">
+								<Ellipse Fill="Red" Width="10" Height="10" />
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+				<DataTemplate x:Key="{x:Static igDP:DataPresenterBase.DataErrorContentTemplateKey}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						<ContentPresenter ContentTemplate="{x:Null}" />
+						<Control Grid.Column="1"
+								 Name="errorIcon"
+								 Visibility="Collapsed"
+								 Style="{DynamicResource {x:Static igDP:DataPresenterBase.DataErrorIconStyleKey}}"
+								 ToolTip="{Binding Host.DataError}" />
+						<Border Name="errorHighlight" BorderBrush="Red" BorderThickness="1" Visibility="Collapsed" />
+					</Grid>
+					<DataTemplate.Triggers>
+						<MultiDataTrigger>
+							<MultiDataTrigger.Conditions>
+								<Condition Binding="{Binding Host.HasDataError}" Value="True" />
+								<Condition Binding="{Binding Host.IsDataErrorDisplayModeIcon}" Value="True" />
+							</MultiDataTrigger.Conditions>
+							<Setter TargetName="errorIcon" Property="Visibility" Value="Visible" />
+						</MultiDataTrigger>
+						<MultiDataTrigger>
+							<MultiDataTrigger.Conditions>
+								<Condition Binding="{Binding Host.HasDataError}" Value="True" />
+								<Condition Binding="{Binding Host.IsDataErrorDisplayModeHighlight}" Value="True" />
+							</MultiDataTrigger.Conditions>
+							<Setter TargetName="errorHighlight" Property="Visibility" Value="Visible" />
+						</MultiDataTrigger>
+					</DataTemplate.Triggers>
+				</DataTemplate>
+			</igDP:XamDataGrid.Resources>
 			<igDP:XamDataGrid.FieldLayoutSettings>
 				<igDP:FieldLayoutSettings AutoGenerateFields="False"
-										  HighlightAlternateRecords="True"/>
+										  HighlightAlternateRecords="True"
+										  SupportDataErrorInfo="RecordsAndCells"/>
 			</igDP:XamDataGrid.FieldLayoutSettings>
 			<igDP:XamDataGrid.FieldSettings>
 				<igDP:FieldSettings AllowEdit="True"

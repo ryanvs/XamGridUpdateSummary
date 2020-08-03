@@ -23,7 +23,7 @@ public abstract class ObservableObject : INotifyPropertyChanged
     /// Raises this object's PropertyChanged event.
     /// </summary>
     /// <param name="propertyName">The property that has a new value.</param>
-    protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+    protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
     {
         this.VerifyPropertyName(propertyName);
 
@@ -40,7 +40,7 @@ public abstract class ObservableObject : INotifyPropertyChanged
 
     #region SetField
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    protected virtual bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
         field = value;

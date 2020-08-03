@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace XamGridUpdateSummary
 {
     [Serializable]
-    public class ComponentItem : ObservableObject, ICloneable
+    public class ComponentItem : ObservableObject, ICloneable, INotifyDataErrorInfo
     {
         [NonSerialized]
         private Formula _formula;
@@ -39,24 +44,33 @@ namespace XamGridUpdateSummary
         }
 
         private double _mass;
+
+        [Required]
+        [Range(double.Epsilon, double.MaxValue)]
         public double Mass
         {
             get { return _mass; }
-            set { SetField(ref _mass, value); }
+            set { SetFieldAndValidate(ref _mass, value); }
         }
 
         private double _volume;
+
+        [Required]
+        [Range(double.Epsilon, double.MaxValue)]
         public double Volume
         {
             get { return _volume; }
-            set { SetField(ref _volume, value); }
+            set { SetFieldAndValidate(ref _volume, value); }
         }
 
         private double _density;
+
+        [Required]
+        [Range(double.Epsilon, double.MaxValue)]
         public double Density
         {
             get { return _density; }
-            set { SetField(ref _density, value); }
+            set { SetFieldAndValidate(ref _density, value); }
         }
 
         private double _percentByVolume;
@@ -78,6 +92,12 @@ namespace XamGridUpdateSummary
         {
             get { return _comment; }
             set { SetField(ref _comment, value); }
+        }
+
+        private void SetFieldAndValidate<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (SetField(ref field, value, propertyName))
+                Validate(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void Calculate()
@@ -130,5 +150,45 @@ namespace XamGridUpdateSummary
         {
             return MemberwiseClone();
         }
+
+        #region INotifyDataErrorInfo implementation
+        private ValidationContext validationContext;
+        private List<ValidationResult> validationResults;
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        void RaiseErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        public bool HasErrors
+        {
+            get { return validationResults?.Count > 0; }
+        }
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            return validationResults?.Where(x => x.MemberNames.Contains(propertyName))
+                                    ?.Select(x => x.ErrorMessage)
+                ?? Enumerable.Empty<string>();
+        }
+
+        private void Validate(object sender, PropertyChangedEventArgs e)
+        {
+            if (validationContext == null)
+                validationContext = new ValidationContext(this, null, null);
+            if (validationResults == null)
+                validationResults = new List<ValidationResult>();
+            else
+                validationResults.Clear();
+            Validator.TryValidateObject(this, validationContext, validationResults, true);
+            var hashSet = new HashSet<string>(validationResults.SelectMany(x => x.MemberNames));
+            foreach (var error in hashSet)
+            {
+                RaiseErrorsChanged(error);
+            }
+        }
+        #endregion
     }
 }

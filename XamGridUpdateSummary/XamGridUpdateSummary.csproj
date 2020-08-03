@@ -34,6 +34,9 @@
       <Reference Include="InfragisticsWPF4.DataPresenter.v20.1">
         <HintPath>$(MSBuildProgramFiles32)\Infragistics\2020.1\WPF\CLR4.0\Bin\InfragisticsWPF4.DataPresenter.v20.1.dll</HintPath>
       </Reference>
+      <Reference Include="InfragisticsWPF4.Editors.v20.1">
+        <HintPath>$(MSBuildProgramFiles32)\Infragistics\2020.1\WPF\CLR4.0\Bin\InfragisticsWPF4.Editors.v20.1.dll</HintPath>
+      </Reference>
       <Reference Include="InfragisticsWPF4.v20.1">
         <HintPath>$(MSBuildProgramFiles32)\Infragistics\2020.1\WPF\CLR4.0\Bin\InfragisticsWPF4.v20.1.dll</HintPath>
       </Reference>

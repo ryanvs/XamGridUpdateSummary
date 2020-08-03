@@ -1,6 +1,7 @@
 ﻿using Infragistics.Collections;
 using Infragistics.Controls.Grids;
 using Infragistics.Controls.Grids.Primitives;
+using Infragistics.Windows.DataPresenter;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -134,7 +135,7 @@ namespace XamGridUpdateSummary
         private void FormulaGrid_ShowGroupByArea(object sender, RoutedEventArgs e)
         {
             var menuItem = (MenuItem)sender;
-            var location = (GroupByAreaLocation)menuItem.Tag;
+            var location = (Infragistics.Controls.Grids.GroupByAreaLocation)menuItem.Tag;
 
             menuItem.IsChecked = true;
             FormulaGrid.GroupBySettings.AllowGroupByArea = location;
@@ -150,10 +151,10 @@ namespace XamGridUpdateSummary
 
         private void FormulaGrid_ToggleFilterRow(object sender, RoutedEventArgs e)
         {
-            if (FormulaGrid.FilteringSettings.AllowFiltering == FilterUIType.FilterRowTop)
-                FormulaGrid.FilteringSettings.AllowFiltering = FilterUIType.None;
+            if (FormulaGrid.FilteringSettings.AllowFiltering == Infragistics.Controls.Grids.FilterUIType.FilterRowTop)
+                FormulaGrid.FilteringSettings.AllowFiltering = Infragistics.Controls.Grids.FilterUIType.None;
             else
-                FormulaGrid.FilteringSettings.AllowFiltering = FilterUIType.FilterRowTop;
+                FormulaGrid.FilteringSettings.AllowFiltering = Infragistics.Controls.Grids.FilterUIType.FilterRowTop;
         }
 
         public bool CanFixColumn
@@ -220,5 +221,25 @@ namespace XamGridUpdateSummary
                 RaisePropertyChanged(nameof(IsGroupByColumn));
             }
         }
+
+        #region XamDataGrid methods
+        /// <summary>
+        /// Validate data during edit of a cell <see cref="https://www.infragistics.com/help/wpf/xamdatapresenter-validate-data-as-your-end-users-edit-a-cell"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FormulaDataGrid_CellChanged(object sender, Infragistics.Windows.DataPresenter.Events.CellChangedEventArgs e)
+        {
+            /* ====
+            object val = e.Editor.Value;
+            if (!(e.Cell.Record is FilterRecord))
+            {
+                if (DBNull.Value == val)
+                    val = null;
+                e.Cell.Value = val;
+            }
+            ==== */
+        }
+        #endregion
     }
 }
