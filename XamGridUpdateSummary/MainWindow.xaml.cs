@@ -109,10 +109,10 @@ namespace XamGridUpdateSummary
             var parent = (CellsPanel)cell.Parent;
             Trace.TraceInformation("HeaderCell_MouseRightButtonDown: ({0}, {1}), ActiveCell: {2}", pos.X, pos.Y, FormulaGrid.ActiveCell);
             _rightClickCell = cell;
-            RaisePropertyChanged("CanFixColumn");
-            RaisePropertyChanged("IsFixedColumn");
-            RaisePropertyChanged("CanGroupByColumn");
-            RaisePropertyChanged("IsGroupByColumn");
+            RaisePropertyChanged(nameof(CanFixColumn));
+            RaisePropertyChanged(nameof(IsFixedColumn));
+            RaisePropertyChanged(nameof(CanGroupByColumn));
+            RaisePropertyChanged(nameof(IsGroupByColumn));
         }
 
         private void FormulaGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -185,8 +185,8 @@ namespace XamGridUpdateSummary
                     column.IsFixed = FixedState.Left;
                 else
                     column.IsFixed = FixedState.NotFixed;
-                RaisePropertyChanged("CanFixColumn");
-                RaisePropertyChanged("IsFixedColumn");
+                RaisePropertyChanged(nameof(CanFixColumn));
+                RaisePropertyChanged(nameof(IsFixedColumn));
             }
         }
 
@@ -216,8 +216,8 @@ namespace XamGridUpdateSummary
             if (column != null && column.IsGroupable)
             {
                 column.IsGroupBy = !column.IsGroupBy;
-                RaisePropertyChanged("CanGroupByColumn");
-                RaisePropertyChanged("IsGroupByColumn");
+                RaisePropertyChanged(nameof(CanGroupByColumn));
+                RaisePropertyChanged(nameof(IsGroupByColumn));
             }
         }
     }

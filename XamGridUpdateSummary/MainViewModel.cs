@@ -114,7 +114,7 @@ namespace XamGridUpdateSummary
                 Trace.TraceInformation("HandlePropertyChanged: {0}.{1} = {2}", c.Name, e.PropertyName, value);
 
                 // Update the component and formula calculations
-                if (!c.IsCalculating && (e.PropertyName == "Mass" || e.PropertyName == "Volume"))
+                if (!c.IsCalculating && (e.PropertyName == nameof(c.Mass) || e.PropertyName == nameof(c.Volume) || e.PropertyName == nameof(c.Density)))
                 {
                     c.Calculate(e.PropertyName);
                     Formula.Calculate(c);

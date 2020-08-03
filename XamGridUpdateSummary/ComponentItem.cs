@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace XamGridUpdateSummary
 {
@@ -58,7 +53,6 @@ namespace XamGridUpdateSummary
         }
 
         private double _density;
-        //[PropertyChanged.AlsoNotifyFor("Mass", "Volume", "PercentByMass", "PercentByVolume")]
         public double Density
         {
             get { return _density; }
@@ -98,7 +92,7 @@ namespace XamGridUpdateSummary
                 if (IsCalculating) return;
                 IsCalculating = true;
 
-                if (string.IsNullOrEmpty(source))
+                if (string.IsNullOrEmpty(source) || source == nameof(Density))
                 {
                     if (Mass == 0.0 && Volume != 0.0)
                         source = nameof(Volume);

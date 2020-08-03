@@ -13,8 +13,10 @@
 		<app:MainViewModel/>
 	</Window.DataContext>
 	<Window.Resources>
-		<Style x:Key="VerticalTextBlock" TargetType="{x:Type TextBlock}">
+		<Style x:Key="VerticalTextBorder" TargetType="{x:Type Border}">
 			<Setter Property="Background" Value="LightGray"/>
+		</Style>
+		<Style x:Key="VerticalTextBlock" TargetType="{x:Type TextBlock}">
 			<Setter Property="HorizontalAlignment" Value="Center"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 			<Setter Property="LayoutTransform">
@@ -66,10 +68,12 @@
 			<RowDefinition Height="1*" MinHeight="100"/>
 		</Grid.RowDefinitions>
 
-		<TextBlock
-			Grid.Row="0" Grid.Column="0"
-			Style="{StaticResource VerticalTextBlock}"
-			Text="XamDataGrid"/>
+		<Border Grid.Row="0" Grid.Column="0"
+				Style="{StaticResource VerticalTextBorder}">
+			<TextBlock
+				Style="{StaticResource VerticalTextBlock}"
+				Text="XamDataGrid"/>
+		</Border>
 
 		<igDP:XamDataGrid
 			x:Name="FormulaDataGrid"
@@ -77,6 +81,11 @@
 			ActiveDataItem="{Binding ActiveItem}"
 			DataSource="{Binding Formula.Components}"
 			GroupByAreaLocation="None">
+            <igDP:XamDataGrid.Resources>
+                <Style TargetType="{x:Type igDP:SummaryResultPresenter}">
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                </Style>
+            </igDP:XamDataGrid.Resources>
 			<igDP:XamDataGrid.FieldLayoutSettings>
 				<igDP:FieldLayoutSettings AutoGenerateFields="False"
 										  HighlightAlternateRecords="True"/>
@@ -157,6 +166,11 @@
 
 					<igDP:FieldLayout.SummaryDefinitions>
 						<igDP:SummaryDefinition
+							Calculator="{x:Static igDP:SummaryCalculator.Count}"
+							SourceFieldName="Position"
+							Key="PositionCount"
+							StringFormat="{}{0}"/>
+						<igDP:SummaryDefinition
 							Calculator="{x:Static igDP:SummaryCalculator.Sum}"
 							SourceFieldName="Mass"
 							Key="MassSum"
@@ -199,10 +213,13 @@
 			</GridSplitter.Template>
 		</GridSplitter>
 
-		<TextBlock
-			Grid.Row="2" Grid.Column="0"
-			Style="{StaticResource VerticalTextBlock}"
-			Text="XamGrid"/>
+		<Border Grid.Row="2" Grid.Column="0"
+				Style="{StaticResource VerticalTextBorder}">
+			<TextBlock
+				Grid.Row="2" Grid.Column="0"
+				Style="{StaticResource VerticalTextBlock}"
+				Text="XamGrid"/>
+		</Border>
 
 		<ig:XamGrid
 			x:Name="FormulaGrid"
