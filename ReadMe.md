@@ -15,11 +15,15 @@ between mass and volume, and then calculate the mass and volume percentages for 
 
 ## Outstanding Issues
 
-1. In XamDataGrid, figure out how to right align the summary cells. It is possible to override the default style, but that causes all summary cells to be affected and not just specific cells.
+1. In XamDataGrid, how to add the "unit of measure" (UOM) to the cell, e.g. for Density: `1.00 kg/L`.
 
-2. In XamDataGrid, connect the context menu for the rows, and a different context menu for the header. (I started with XamGrid, so it was implemented there first.)
+2. In XamDataGrid, figure out how to right align the summary cells. It is possible to override the default style, but that causes all summary cells to be affected and not just specific cells.
 
-3. In XamDataGrid, figure out how to remove summary functions from the available list. This was easy with XamGrid, but I have not figured it out yet in XamDataGrid.
+3. In XamDataGrid, connect the context menu for the rows, and a different context menu for the header. (I started with XamGrid, so it was implemented there first.)
+
+4. In XamDataGrid, figure out how to remove summary functions from the available list. This was easy with XamGrid, but I have not figured it out yet in XamDataGrid.
+
+5. In XamDataGrid, the `errorHighlight` border in the cell is not displayed due to the Condition `Host.IsDataErrorDisplayModeHighlight`. It is probably just a setting that needs to be changed.
 
 ## XamGrid Resolved Issues
 
